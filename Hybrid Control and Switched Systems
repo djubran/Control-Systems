@@ -1,0 +1,56 @@
+
+%Hybrid Control and Switched Systems -  dx = Ax -->switch between {A1,A2}
+
+%% Question 2.a - unstable
+%when x(1)*x(2)>=0 ->A1
+%when x(1)*x(2)<0 ->A2
+figure(1);clf
+fcn = @A2
+eventoptions=odeset('OutputFcn','odeplot','OutputSel',[1 2])
+[t,y] =  ode45(fcn, [0, 10], [5;-6],eventoptions)
+title('x1,x2')
+xlabel('time [sec]')
+ylabel('x(t) - solution ')
+legend('x_1(t)','x_2(t)')
+function dx = A2(t,x)
+X1=x(1)
+X2=x(2)
+A1=[-.5,-.4;3,-.5]
+A2=[-.5,-3;.4,-.5]
+
+F1=A1(1,1)*X1+A1(1,2)*X2;
+F2=A1(2,1)*X1+A1(2,2)*X2;
+
+k=find(X1.*X2<0);
+
+F1(k)=A2(1,1)*X1(k)+A2(1,2)*X2(k);
+F2(k)=A2(2,1)*X1(k)+A2(2,2)*X2(k);
+dx=[F1;F2]
+end
+
+%% Question 2.b - stable
+%when x(1)*x(2)<=0 ->A1
+%when x(1)*x(2)>0 ->A2
+figure(1);clf
+fcn = @A2
+eventoptions=odeset('OutputFcn','odeplot','OutputSel',[1 2])
+[t,y] =  ode45(fcn, [0, 10], [5;-6],eventoptions)
+title('x1,x2')
+xlabel('time [sec]')
+ylabel('x(t) - solution ')
+legend('x_1(t)','x_2(t)')
+function dx = A2(t,x)
+X1=x(1)
+X2=x(2)
+A1=[-.5,-.4;3,-.5]
+A2=[-.5,-3;.4,-.5]
+
+F1=A1(1,1)*X1+A1(1,2)*X2;
+F2=A1(2,1)*X1+A1(2,2)*X2;
+
+k=find(X1.*X2>0);
+
+F1(k)=A2(1,1)*X1(k)+A2(1,2)*X2(k);
+F2(k)=A2(2,1)*X1(k)+A2(2,2)*X2(k);
+dx=[F1;F2]
+end
